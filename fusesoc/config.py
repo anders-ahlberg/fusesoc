@@ -56,6 +56,9 @@ class Config:
         logger.debug("cache_root=" + self.cache_root)
         logger.debug("library_root=" + self.library_root)
         logger.debug("ssh-trustfile=" + (self.ssh_trustfile or "none"))
+        logger.debug("user name=" + (self.user_name or "none"))
+        logger.debug("user email=" + (self.user_email or "none"))
+        logger.debug("user spdxid=" + (self.user_spdxid or "none"))
 
     def _parse_library(self):
         # Parse library sections
@@ -151,6 +154,12 @@ class Config:
     def _set_default_section(self, name, val):
         self._cp.set(Config.default_section, name, str(val))
 
+    def _set_user_section(self, name, val):
+        self._cp.set("user", name, val)
+
+    def _get_user_section(self, name):
+        return self._cp.get("user", name, fallback=None)
+
     def _arg_or_val(self, arg, val):
         if hasattr(self, arg):
             return getattr(self, arg)
@@ -190,6 +199,30 @@ class Config:
     @cache_root.setter
     def cache_root(self, val):
         self._set_default_section("cache_root", val)
+
+    @property
+    def user_name(self):
+        return self._get_user_section("name")
+
+    @user_name.setter
+    def user_name(self, val):
+        self._set_user_section("name", val)
+
+    @property
+    def user_email(self):
+        return self._get_user_section("email")
+
+    @user_email.setter
+    def user_email(self, val):
+        self._set_user_section("email", val)
+
+    @property
+    def user_spdxid(self):
+        return self._get_user_section("spdxid")
+
+    @user_spdxid.setter
+    def user_spdxid(self, val):
+        self._set_user_section("spdxid", val)
 
     @property
     def ssh_trustfile(self):
